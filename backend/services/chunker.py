@@ -1,7 +1,6 @@
 import re
 import uuid
 
-
 SECTION_HEADERS = [
     "PATIENT INFORMATION",
     "PROVIDER INFORMATION",
@@ -59,7 +58,7 @@ def chunk_eob_by_section(
         if stripped in SECTION_HEADERS:
             header_positions.append((i, stripped))
 
-    chunks = []
+    chunks: list[dict] = []
 
     if header_positions and header_positions[0][0] > 0:
         header_text = "\n".join(lines[: header_positions[0][0]]).strip()
@@ -76,10 +75,7 @@ def chunk_eob_by_section(
                 )
 
     for idx, (line_num, section_name) in enumerate(header_positions):
-        if idx + 1 < len(header_positions):
-            end_line = header_positions[idx + 1][0]
-        else:
-            end_line = len(lines)
+        end_line = header_positions[idx + 1][0] if idx + 1 < len(header_positions) else len(lines)
 
         section_text = "\n".join(lines[line_num:end_line]).strip()
 

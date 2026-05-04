@@ -14,6 +14,7 @@ export interface QueryMetadata {
   total_latency_ms: number;
   total_tokens: number;
   model: string;
+  prompt_version?: string;
 }
 
 export interface RAGResponse {

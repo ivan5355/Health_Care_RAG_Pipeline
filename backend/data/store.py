@@ -1,10 +1,11 @@
 import os
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from models.document import Document, DocumentChunk, DocumentDetail
 from services.chunker import chunk_eob_by_section, extract_patient_name
 from services.embeddings import generate_embeddings_batch
-from services.pinecone_store import upsert_chunks, delete_by_document
+from services.pinecone_store import delete_by_document, upsert_chunks
 
 documents: dict[str, DocumentDetail] = {}
 
@@ -34,7 +35,7 @@ def ingest_document(name: str, raw_text: str) -> DocumentDetail:
     doc = DocumentDetail(
         id=doc_id,
         name=name,
-        upload_date=datetime.now(timezone.utc),
+        upload_date=datetime.now(UTC),
         status="ready",
         chunk_count=len(chunks),
         raw_text=raw_text,
@@ -74,11 +75,7 @@ def remove_document(doc_id: str) -> bool:
 def _find_sample_eobs() -> list[str]:
     eob_dir = os.getenv("SAMPLE_EOB_DIR", "")
     if eob_dir and os.path.isdir(eob_dir):
-        return sorted(
-            os.path.join(eob_dir, f)
-            for f in os.listdir(eob_dir)
-            if f.endswith(".txt")
-        )
+        return sorted(os.path.join(eob_dir, f) for f in os.listdir(eob_dir) if f.endswith(".txt"))
     # Fallback: single file from old env var
     env_path = os.getenv("SAMPLE_EOB_PATH")
     if env_path and os.path.exists(env_path):
@@ -91,9 +88,11 @@ def _find_sample_eobs() -> list[str]:
 
 def load_sample_eob():
     import logging
+
     logger = logging.getLogger(__name__)
 
     from services.pinecone_store import get_pinecone_index
+
     try:
         idx = get_pinecone_index()
         stats = idx.describe_index_stats()
@@ -113,8 +112,11 @@ def load_sample_eob():
 
     # If vectors already exist with correct count, just register in memory
     if stats.total_vector_count >= expected_count:
-        logger.info("Pinecone already has %d vectors, registering %d documents in memory",
-                     stats.total_vector_count, len(sample_paths))
+        logger.info(
+            "Pinecone already has %d vectors, registering %d documents in memory",
+            stats.total_vector_count,
+            len(sample_paths),
+        )
         for path in sample_paths:
             name = os.path.basename(path)
             doc_id = name.replace(".txt", "").replace(".", "_")
@@ -122,15 +124,23 @@ def load_sample_eob():
                 text = f.read()
             chunks_raw = chunk_eob_by_section(doc_id, text)
             chunks = [
-                DocumentChunk(id=c["id"], document_id=c["document_id"],
-                              section_name=c["section_name"], text=c["text"],
-                              chunk_index=c["chunk_index"])
+                DocumentChunk(
+                    id=c["id"],
+                    document_id=c["document_id"],
+                    section_name=c["section_name"],
+                    text=c["text"],
+                    chunk_index=c["chunk_index"],
+                )
                 for c in chunks_raw
             ]
             doc = DocumentDetail(
-                id=doc_id, name=name,
-                upload_date=datetime.now(timezone.utc), status="ready",
-                chunk_count=len(chunks), raw_text=text, chunks=chunks,
+                id=doc_id,
+                name=name,
+                upload_date=datetime.now(UTC),
+                status="ready",
+                chunk_count=len(chunks),
+                raw_text=text,
+                chunks=chunks,
             )
             documents[doc_id] = doc
         return

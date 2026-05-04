@@ -3,23 +3,23 @@ import logging
 import time
 import uuid
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
 
-from services.bedrock_client import converse
-from services.rag import query_rag
-from services import prompt_manager
 from models.evaluation import (
     EvaluationRun,
     EvaluationRunDetail,
-    JudgeMetrics,
-    RetrievalMetrics,
     GenerationMetrics,
+    JudgeMetrics,
     PerFieldMetric,
+    RetrievalMetrics,
     StratifiedMetric,
 )
+from services import prompt_manager
+from services.bedrock_client import converse
+from services.rag import query_rag
 
 logger = logging.getLogger(__name__)
 
@@ -135,11 +135,7 @@ def judge_correctness(question: str, expected_answer: str, actual_answer: str) -
         "5 = fully correct\n\n"
         'Respond with JSON only: {"score": <int>, "reasoning": "<brief explanation>"}'
     )
-    user = (
-        f"Question: {question}\n\n"
-        f"Expected answer: {expected_answer}\n\n"
-        f"Actual answer: {actual_answer}"
-    )
+    user = f"Question: {question}\n\nExpected answer: {expected_answer}\n\nActual answer: {actual_answer}"
     return _call_judge(system, user)
 
 
@@ -156,11 +152,7 @@ def judge_completeness(question: str, expected_answer: str, actual_answer: str) 
         "5 = all key facts present\n\n"
         'Respond with JSON only: {"score": <int>, "reasoning": "<brief explanation>"}'
     )
-    user = (
-        f"Question: {question}\n\n"
-        f"Expected answer: {expected_answer}\n\n"
-        f"Actual answer: {actual_answer}"
-    )
+    user = f"Question: {question}\n\nExpected answer: {expected_answer}\n\nActual answer: {actual_answer}"
     return _call_judge(system, user)
 
 
@@ -177,11 +169,7 @@ def judge_grounding(question: str, actual_answer: str, source_texts: list[str]) 
         "5 = fully grounded in sources\n\n"
         'Respond with JSON only: {"score": <int>, "reasoning": "<brief explanation>"}'
     )
-    user = (
-        f"Question: {question}\n\n"
-        f"Actual answer: {actual_answer}\n\n"
-        f"Source documents:\n{sources_combined}"
-    )
+    user = f"Question: {question}\n\nActual answer: {actual_answer}\n\nSource documents:\n{sources_combined}"
     return _call_judge(system, user)
 
 
@@ -197,8 +185,8 @@ def run_evaluation(name: str = "RAG Evaluation", prompt_version: str | None = No
     latencies = []
     costs = []
 
-    all_precisions = {1: [], 3: [], 5: []}
-    all_recalls = {1: [], 3: [], 5: []}
+    all_precisions: dict[int, list[float]] = {1: [], 3: [], 5: []}
+    all_recalls: dict[int, list[float]] = {1: [], 3: [], 5: []}
     all_mrrs = []
     all_faithfulness = []
     all_relevance = []
@@ -276,40 +264,44 @@ def run_evaluation(name: str = "RAG Evaluation", prompt_version: str | None = No
         all_judge_completeness.append(j_complete.get("score", 0))
         all_judge_grounding.append(j_ground.get("score", 0))
 
-        queries_results.append({
-            "id": gt.get("id", ""),
-            "question": gt["question"],
-            "expected": gt["expected_answer"],
-            "answer": response.answer,
-            "retrieved_sections": retrieved_sections,
-            "category": gt.get("category", ""),
-            "document_type": gt.get("document_type", ""),
-            "payer": gt.get("payer", ""),
-            "difficulty": gt.get("difficulty", ""),
-            "edge_case": gt.get("edge_case", False),
-            "field_results": field_results,
-            "relevance": round(relevance, 4),
-            "completeness": round(completeness, 4),
-            "faithfulness": round(faithfulness, 4),
-            "judge_correctness": j_correct.get("score", 0),
-            "judge_correctness_reasoning": j_correct.get("reasoning", ""),
-            "judge_completeness": j_complete.get("score", 0),
-            "judge_completeness_reasoning": j_complete.get("reasoning", ""),
-            "judge_grounding": j_ground.get("score", 0),
-            "judge_grounding_reasoning": j_ground.get("reasoning", ""),
-        })
+        queries_results.append(
+            {
+                "id": gt.get("id", ""),
+                "question": gt["question"],
+                "expected": gt["expected_answer"],
+                "answer": response.answer,
+                "retrieved_sections": retrieved_sections,
+                "category": gt.get("category", ""),
+                "document_type": gt.get("document_type", ""),
+                "payer": gt.get("payer", ""),
+                "difficulty": gt.get("difficulty", ""),
+                "edge_case": gt.get("edge_case", False),
+                "field_results": field_results,
+                "relevance": round(relevance, 4),
+                "completeness": round(completeness, 4),
+                "faithfulness": round(faithfulness, 4),
+                "judge_correctness": j_correct.get("score", 0),
+                "judge_correctness_reasoning": j_correct.get("reasoning", ""),
+                "judge_completeness": j_complete.get("score", 0),
+                "judge_completeness_reasoning": j_complete.get("reasoning", ""),
+                "judge_grounding": j_ground.get("score", 0),
+                "judge_grounding_reasoning": j_ground.get("reasoning", ""),
+            }
+        )
 
     # Build per-field metrics
     per_field = []
     for field_name in sorted(field_total.keys()):
         total = field_total[field_name]
-        correct = field_correct[field_name]
-        per_field.append(PerFieldMetric(
-            field_name=field_name,
-            correct=correct,
-            total=total,
-            accuracy=round(correct / total, 4) if total else 0.0,
-        ))
+        correct_count = field_correct[field_name]
+        per_field.append(
+            PerFieldMetric(
+                field_name=field_name,
+                correct=correct_count,
+                total=total,
+                accuracy=round(correct_count / total, 4) if total else 0.0,
+            )
+        )
 
     # Build stratified metrics
     stratified = []
@@ -318,23 +310,24 @@ def run_evaluation(name: str = "RAG Evaluation", prompt_version: str | None = No
             all_field_results = []
             for e in entries:
                 all_field_results.extend(e["field_results"].values())
-            field_acc = (_avg([1.0 if v else 0.0 for v in all_field_results])
-                         if all_field_results else 0.0)
+            field_acc = _avg([1.0 if v else 0.0 for v in all_field_results]) if all_field_results else 0.0
 
-            stratified.append(StratifiedMetric(
-                group_name=group_name,
-                group_value=group_value,
-                count=len(entries),
-                avg_relevance=round(_avg([e["relevance"] for e in entries]), 4),
-                avg_completeness=round(_avg([e["completeness"] for e in entries]), 4),
-                avg_faithfulness=round(_avg([e["faithfulness"] for e in entries]), 4),
-                field_accuracy=round(field_acc, 4),
-            ))
+            stratified.append(
+                StratifiedMetric(
+                    group_name=group_name,
+                    group_value=group_value,
+                    count=len(entries),
+                    avg_relevance=round(_avg([e["relevance"] for e in entries]), 4),
+                    avg_completeness=round(_avg([e["completeness"] for e in entries]), 4),
+                    avg_faithfulness=round(_avg([e["faithfulness"] for e in entries]), 4),
+                    field_accuracy=round(field_acc, 4),
+                )
+            )
 
     detail = EvaluationRunDetail(
         id=run_id,
         name=name,
-        timestamp=datetime.now(timezone.utc),
+        timestamp=datetime.now(UTC),
         query_count=len(golden_examples),
         avg_latency_ms=round(_avg(latencies), 1),
         retrieval_metrics=RetrievalMetrics(
@@ -394,9 +387,9 @@ def run_comparison(version_a: str, version_b: str, name: str = "Prompt Compariso
     }
 
 
-def _check_regression(baseline: EvaluationRunDetail, candidate: EvaluationRunDetail, tolerance: float = 0.05) -> dict:
+def _check_regression(baseline: EvaluationRunDetail, candidate: EvaluationRunDetail, tolerance: float = 0.05) -> dict:  # type: ignore[type-arg]
     """Compare candidate against baseline. Flag regressions beyond tolerance."""
-    checks = {}
+    checks: dict = {}
     for metric_name in ("faithfulness", "relevance", "completeness"):
         base_val = getattr(baseline.generation_metrics, metric_name)
         cand_val = getattr(candidate.generation_metrics, metric_name)
@@ -415,15 +408,20 @@ def _check_regression(baseline: EvaluationRunDetail, candidate: EvaluationRunDet
     for field, base_acc in base_fields.items():
         cand_acc = cand_fields.get(field, 0.0)
         if cand_acc < base_acc - tolerance:
-            field_regressions.append({
-                "field": field,
-                "baseline": base_acc,
-                "candidate": cand_acc,
-                "diff": round(cand_acc - base_acc, 4),
-            })
+            field_regressions.append(
+                {
+                    "field": field,
+                    "baseline": base_acc,
+                    "candidate": cand_acc,
+                    "diff": round(cand_acc - base_acc, 4),
+                }
+            )
 
     checks["field_regressions"] = field_regressions
-    checks["blocked"] = any(c.get("regressed") for c in checks.values() if isinstance(c, dict) and "regressed" in c) or len(field_regressions) > 0
+    checks["blocked"] = (
+        any(c.get("regressed") for c in checks.values() if isinstance(c, dict) and "regressed" in c)
+        or len(field_regressions) > 0
+    )
 
     return checks
 
