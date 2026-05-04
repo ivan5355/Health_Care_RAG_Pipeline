@@ -1,0 +1,57 @@
+EXPLANATION OF BENEFITS
+=======================
+
+Payer: CIGNA HEALTHCARE                      Claim #: CLM-2025-57204
+Group #: GRP-6610348                          Date Processed: 02/28/2025
+
+PATIENT INFORMATION
+  Name: THOMPSON, DAVID A                   DOB: 11/02/1968
+  Member ID: CGN-5720488                      Relationship: SELF
+
+PROVIDER INFORMATION
+  Rendering: DR. SARAH KIM, MD               NPI: 1122334455
+  Facility: CENTRAL VALLEY MEDICAL GROUP
+  Tax ID: 52-7781034
+
+SERVICE LINES
+  DOS         CPT      MOD   DESC                        BILLED    ALLOWED  COPAY  PAID
+  -------------------------------------------------------------------------------------
+  01/06/2025  99215          OFFICE VISIT-ESTAB HI        $265.00   $205.00  $40.00  $165.00
+  01/06/2025  85025          CBC W/AUTO DIFF              $ 48.00   $ 41.00  $ 0.00  $ 41.00
+  01/06/2025  80053          COMP METABOLIC PANEL         $ 95.00   $ 78.00  $ 0.00  $ 78.00
+  01/06/2025  83036          HEMOGLOBIN A1C               $ 62.00   $ 49.50  $ 0.00  $ 49.50
+  01/06/2025  80061          LIPID PANEL                  $ 75.00   $ 58.00  $ 0.00  $ 58.00
+  01/13/2025  93000          ECG 12-LEAD                  $125.00   $ 95.00  $ 0.00  $ 95.00
+  01/13/2025  93306          ECHOCARDIOGRAM COMPLETE      $890.00   $685.00  $40.00  $645.00
+  01/20/2025  99214          OFFICE VISIT-ESTAB MOD       $195.00   $148.00  $40.00  $108.00
+  01/20/2025  93798          CARDIAC REHAB/MONITOR        $210.00   $165.00  $ 0.00  $165.00
+  01/27/2025  99214          OFFICE VISIT-ESTAB MOD       $195.00   $148.00  $40.00  $108.00
+  01/27/2025  93015          CARDIOVASCULAR STRESS TST    $345.00   $268.00  $ 0.00  $268.00
+  02/03/2025  99215          OFFICE VISIT-ESTAB HI        $265.00   $205.00  $40.00  $165.00
+  02/03/2025  93452          LEFT HEART CATHETERIZATION   $4,200.00 $3,150.00 $40.00 $3,110.00
+
+DIAGNOSIS CODES
+  1. I25.10  - Atherosclerotic heart disease of native coronary artery w/o angina
+  2. I10     - Essential (primary) hypertension
+  3. E11.65  - Type 2 diabetes mellitus w/ hyperglycemia
+  4. E78.5   - Hyperlipidemia, unspecified
+  5. I48.91  - Unspecified atrial fibrillation
+  6. Z95.1   - Presence of aortocoronary bypass graft
+  7. Z79.01  - Long term (current) use of anticoagulants
+
+TOTALS
+  Total Billed:   $6,970.00
+  Total Allowed:  $5,295.50
+  Patient Resp:   $  240.00
+  Total Paid:     $5,055.50
+
+REMARKS
+  - Line 7: Echocardiogram authorized under PA-20250108-012. Copay applies per specialist visit.
+  - Line 13: Left heart catheterization authorized under PA-20250125-007. Facility fee billed separately.
+  - Lines 9, 11: Cardiac rehab and stress test covered at 100% after copay waiver per cardiac care benefit.
+  - Patient has met annual deductible ($500.00) as of 01/06/2025.
+  - Out-of-pocket maximum: $4,000.00. Year-to-date: $1,840.00.
+  - Appeal deadline: 05/28/2025
+
+THIS IS NOT A BILL. Please retain for your records.
+Processed by CIGNA HEALTHCARE - PO BOX 188011, CHATTANOOGA, TN 37422

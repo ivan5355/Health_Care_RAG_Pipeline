@@ -1,0 +1,45 @@
+EXPLANATION OF BENEFITS
+=======================
+
+Payer: BLUE CROSS BLUE SHIELD OF ILLINOIS    Claim #: CLM-2025-41087
+Group #: GRP-9903215                          Date Processed: 04/10/2025
+
+PATIENT INFORMATION
+  Name: RODRIGUEZ, MARIA E                  DOB: 06/19/1990
+  Member ID: BCBS-4108722                     Relationship: SELF
+
+PROVIDER INFORMATION
+  Rendering: DR. JAMES OKAFOR, MD            NPI: 5566778899
+  Facility: NORTHSHORE PRIMARY CARE
+  Tax ID: 36-8842017
+
+SERVICE LINES
+  DOS         CPT      MOD   DESC                        BILLED    ALLOWED  COPAY  PAID
+  -------------------------------------------------------------------------------------
+  03/25/2025  99395          PREVENTIVE VISIT 18-39       $285.00   $285.00  $ 0.00  $285.00
+  03/25/2025  90471          IMMUNIZATION ADMIN            $ 25.00   $ 25.00  $ 0.00  $ 25.00
+  03/25/2025  90686          FLU VACCINE IIV4              $ 45.00   $ 45.00  $ 0.00  $ 45.00
+  03/25/2025  36415          VENIPUNCTURE ROUTINE          $ 15.00   $ 15.00  $ 0.00  $ 15.00
+  03/25/2025  85025          CBC W/AUTO DIFF              $ 48.00   $ 41.00  $ 0.00  $ 41.00
+  03/25/2025  80061          LIPID PANEL                  $ 75.00   $ 58.00  $ 0.00  $ 58.00
+  03/25/2025  81002          URINALYSIS NON-AUTO          $ 18.00   $ 15.00  $ 0.00  $ 15.00
+
+DIAGNOSIS CODES
+  1. Z00.00  - Encounter for general adult medical exam w/o abnormal findings
+  2. Z23     - Encounter for immunization
+  3. Z13.220 - Encounter for screening for lipoid disorders
+
+TOTALS
+  Total Billed:   $511.00
+  Total Allowed:  $484.00
+  Patient Resp:   $  0.00
+  Total Paid:     $484.00
+
+REMARKS
+  - All services covered at 100% under ACA preventive care benefit. No cost-sharing applies.
+  - Flu vaccine covered under preventive immunization schedule.
+  - Lab work (lines 5-7) covered as part of annual wellness screening.
+  - Next recommended preventive visit: 03/2026.
+
+THIS IS NOT A BILL. Please retain for your records.
+Processed by BLUE CROSS BLUE SHIELD OF ILLINOIS - PO BOX 805107, CHICAGO, IL 60680

@@ -1,0 +1,45 @@
+EXPLANATION OF BENEFITS
+=======================
+
+Payer: UNITEDHEALTHCARE CHOICE PLUS          Claim #: CLM-2025-33019
+Group #: GRP-7782001                          Date Processed: 03/22/2025
+
+PATIENT INFORMATION
+  Name: CHEN, LINDA M                       DOB: 03/27/1985
+  Member ID: UHC-3301944                      Relationship: SELF
+
+PROVIDER INFORMATION
+  Rendering: DR. ROBERT AKINS, DO            NPI: 9876543210
+  Facility: LAKESIDE ORTHOPEDIC ASSOCIATES
+  Tax ID: 47-5529103
+
+SERVICE LINES
+  DOS         CPT      MOD   DESC                        BILLED    ALLOWED  COPAY  PAID
+  -------------------------------------------------------------------------------------
+  03/10/2025  99213          OFFICE VISIT-ESTAB LOW       $145.00   $110.00  $25.00  $ 85.00
+  03/10/2025  72148          MRI LUMBAR W/O CONTRAST      $1,850.00 $  0.00  $ 0.00  $  0.00  **DENIED**
+  03/10/2025  20610          ARTHROCENTESIS MAJOR JT      $385.00   $298.00  $ 0.00  $298.00
+  03/15/2025  97110          THERAPEUTIC EXERCISES         $120.00   $ 92.50  $25.00  $ 67.50
+  03/15/2025  97140          MANUAL THERAPY 1+ REGIONS    $115.00   $ 88.00  $ 0.00  $ 88.00
+
+DIAGNOSIS CODES
+  1. M54.5   - Low back pain
+  2. M51.16  - Intervertebral disc degeneration, lumbar region
+  3. M79.3   - Panniculitis, unspecified
+  4. G89.29  - Other chronic pain
+
+TOTALS
+  Total Billed:   $2,615.00
+  Total Allowed:  $  588.50
+  Total Denied:   $1,850.00
+  Patient Resp:   $   50.00
+  Total Paid:     $  538.50
+
+REMARKS
+  - Line 2 DENIED: Prior authorization required. No PA on file for CPT 72148. Denial code: PR-197.
+  - Submit prior authorization request to UHC Radiology Management at 1-866-889-8054.
+  - Line 3: Allowed under ortho benefit. No copay for in-office procedures.
+  - Appeal deadline: 06/22/2025. Submit appeals to PO BOX 30432, Salt Lake City, UT 84130.
+
+THIS IS NOT A BILL. Please retain for your records.
+Processed by UNITEDHEALTHCARE - PO BOX 30432, SALT LAKE CITY, UT 84130

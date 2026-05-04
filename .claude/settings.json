@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(aws dynamodb query *)",
+      "Bash(aws dynamodb scan *)",
+      "Bash(aws dynamodb list-tables *)",
+      "Bash(aws dynamodb get-item *)",
+      "Bash(aws sts get-caller-identity *)",
+      "Bash(aws cloudformation list-stacks *)",
+      "Bash(aws cloudformation describe-stacks *)",
+      "Bash(aws cognito-idp list-users *)",
+      "Bash(aws cognito-idp describe-user-pool-client *)",
+      "Bash(aws lambda list-functions *)",
+      "Bash(aws lambda get-function-configuration *)",
+      "Bash(aws s3 ls *)",
+      "Bash(aws configure list-profiles *)",
+      "Bash(curl *)",
+      "Bash(lsof *)",
+      "Bash(docker logs *)"
+    ]
+  }
+}

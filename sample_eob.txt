@@ -1,0 +1,43 @@
+EXPLANATION OF BENEFITS
+=======================
+
+Payer: AETNA BETTER HEALTH                   Claim #: CLM-2024-88412
+Group #: GRP-4410125                          Date Processed: 01/15/2025
+
+PATIENT INFORMATION
+  Name: WALKER, JAMES R                      DOB: 08/14/1952
+  Member ID: AET-8841209                      Relationship: SELF
+
+PROVIDER INFORMATION
+  Rendering: DR. MARIA GONZALEZ, MD          NPI: 1234567890
+  Facility: MIDWEST REGIONAL MEDICAL CTR
+  Tax ID: 36-4125890
+
+SERVICE LINES
+  DOS         CPT      MOD   DESC                        BILLED    ALLOWED  COPAY  PAID
+  -------------------------------------------------------------------------------------
+  12/28/2024  99214          OFFICE VISIT-ESTAB MOD       $187.00   $142.50  $30.00  $112.50
+  12/28/2024  85025          CBC W/AUTO DIFF              $ 45.00   $ 38.00  $ 0.00  $ 38.00
+  12/28/2024  80053          COMP METABOLIC PANEL         $ 92.00   $ 74.25  $ 0.00  $ 74.25
+  01/02/2025  99215          OFFICE VISIT-ESTAB HI        $248.00   $198.00  $30.00  $168.00
+  01/02/2025  93000          ECG 12-LEAD                  $115.00   $ 89.00  $ 0.00  $ 89.00
+
+DIAGNOSIS CODES
+  1. E11.65  - Type 2 diabetes mellitus w/ hyperglycemia
+  2. I10     - Essential (primary) hypertension
+  3. E78.5   - Hyperlipidemia, unspecified
+  4. Z79.84  - Long term (current) use of oral hypoglycemic drugs
+
+TOTALS
+  Total Billed:   $687.00
+  Total Allowed:  $541.75
+  Patient Resp:   $ 60.00
+  Total Paid:     $481.75
+
+REMARKS:
+  - Line 1: Modifier 25 required for E/M with same-day labs. Claim adjusted.
+  - Prior Authorization PA-20241218-004 on file for 93000.
+  - Appeal deadline: 04/15/2025
+
+THIS IS NOT A BILL. Please retain for your records.
+Processed by AETNA BETTER HEALTH - PO BOX 981106, EL PASO, TX 79998

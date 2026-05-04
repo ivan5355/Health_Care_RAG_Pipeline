@@ -1,0 +1,220 @@
+version: "1.0"
+description: "Golden evaluation dataset for healthcare EOB extraction — curated, human-labeled examples"
+
+examples:
+  # ---- sample_eob.txt (WALKER, JAMES R — Aetna, standard EOB) ----
+  - id: gt_001
+    question: "What was the total billed amount?"
+    expected_answer: "$687.00"
+    relevant_sections: ["TOTALS"]
+    document_type: standard_eob
+    payer: aetna
+    category: financial_totals
+    expected_fields:
+      total_billed: "$687.00"
+    difficulty: easy
+
+  - id: gt_002
+    question: "Which diagnosis codes were documented?"
+    expected_answer: "E11.65, I10, E78.5, Z79.84"
+    relevant_sections: ["DIAGNOSIS CODES"]
+    document_type: standard_eob
+    payer: aetna
+    category: clinical_codes
+    expected_fields:
+      diagnosis_code_1: "E11.65"
+      diagnosis_code_2: "I10"
+      diagnosis_code_3: "E78.5"
+      diagnosis_code_4: "Z79.84"
+    difficulty: medium
+
+  - id: gt_003
+    question: "What was the copay for the ECG?"
+    expected_answer: "$0.00"
+    relevant_sections: ["SERVICE LINES"]
+    document_type: standard_eob
+    payer: aetna
+    category: service_details
+    expected_fields:
+      ecg_copay: "$0.00"
+    difficulty: easy
+
+  - id: gt_004
+    question: "Who is the rendering provider?"
+    expected_answer: "DR. MARIA GONZALEZ, MD"
+    relevant_sections: ["PROVIDER INFORMATION"]
+    document_type: standard_eob
+    payer: aetna
+    category: provider_info
+    expected_fields:
+      rendering_provider: "DR. MARIA GONZALEZ, MD"
+    difficulty: easy
+
+  - id: gt_005
+    question: "What is the patient's member ID?"
+    expected_answer: "AET-8841209"
+    relevant_sections: ["PATIENT INFORMATION"]
+    document_type: standard_eob
+    payer: aetna
+    category: patient_info
+    expected_fields:
+      member_id: "AET-8841209"
+    difficulty: easy
+
+  - id: gt_006
+    question: "What is the appeal deadline?"
+    expected_answer: "04/15/2025"
+    relevant_sections: ["REMARKS"]
+    document_type: standard_eob
+    payer: aetna
+    category: administrative
+    expected_fields:
+      appeal_deadline: "04/15/2025"
+    difficulty: easy
+
+  - id: gt_007
+    question: "How much did the patient owe versus what insurance paid?"
+    expected_answer: "Patient owed $60.00 (two $30.00 copays). Insurance paid $481.75."
+    relevant_sections: ["TOTALS", "SERVICE LINES"]
+    document_type: standard_eob
+    payer: aetna
+    category: financial_totals
+    expected_fields:
+      patient_responsibility: "$60.00"
+      total_paid: "$481.75"
+    difficulty: medium
+
+  # ---- sample_eob_denied.txt (CHEN, LINDA M — UHC, denied MRI) ----
+  - id: gt_008
+    question: "Was any service denied?"
+    expected_answer: "Yes, the MRI lumbar without contrast (CPT 72148) was denied. Denial reason: prior authorization required, no PA on file. Denial code PR-197."
+    relevant_sections: ["SERVICE LINES", "REMARKS"]
+    document_type: denied_eob
+    payer: uhc
+    category: claim_status
+    expected_fields:
+      denial_present: "yes"
+      denied_service: "MRI"
+      denied_cpt: "72148"
+      denial_code: "PR-197"
+    difficulty: hard
+    edge_case: true
+
+  - id: gt_009
+    question: "What was the total denied amount?"
+    expected_answer: "$1,850.00"
+    relevant_sections: ["TOTALS"]
+    document_type: denied_eob
+    payer: uhc
+    category: financial_totals
+    expected_fields:
+      total_denied: "$1,850.00"
+    difficulty: easy
+
+  - id: gt_010
+    question: "Who is the patient and what is their member ID?"
+    expected_answer: "CHEN, LINDA M, member ID UHC-3301944"
+    relevant_sections: ["PATIENT INFORMATION"]
+    document_type: denied_eob
+    payer: uhc
+    category: patient_info
+    expected_fields:
+      patient_name: "CHEN, LINDA M"
+      member_id: "UHC-3301944"
+    difficulty: easy
+
+  # ---- sample_eob_multiline.txt (THOMPSON, DAVID A — Cigna, cardiac) ----
+  - id: gt_011
+    question: "How many service lines are on this claim?"
+    expected_answer: "13 service lines"
+    relevant_sections: ["SERVICE LINES"]
+    document_type: complex_eob
+    payer: cigna
+    category: service_details
+    expected_fields:
+      service_line_count: "13"
+    difficulty: medium
+
+  - id: gt_012
+    question: "What was the total billed amount?"
+    expected_answer: "$6,970.00"
+    relevant_sections: ["TOTALS"]
+    document_type: complex_eob
+    payer: cigna
+    category: financial_totals
+    expected_fields:
+      total_billed: "$6,970.00"
+    difficulty: easy
+
+  - id: gt_013
+    question: "What is the patient's out-of-pocket maximum and year-to-date amount?"
+    expected_answer: "Out-of-pocket maximum is $4,000.00. Year-to-date is $1,840.00."
+    relevant_sections: ["REMARKS"]
+    document_type: complex_eob
+    payer: cigna
+    category: financial_totals
+    expected_fields:
+      oop_max: "$4,000.00"
+      oop_ytd: "$1,840.00"
+    difficulty: hard
+    edge_case: true
+
+  - id: gt_014
+    question: "Which diagnosis codes include atrial fibrillation?"
+    expected_answer: "I48.91 — Unspecified atrial fibrillation"
+    relevant_sections: ["DIAGNOSIS CODES"]
+    document_type: complex_eob
+    payer: cigna
+    category: clinical_codes
+    expected_fields:
+      afib_code: "I48.91"
+    difficulty: medium
+
+  # ---- sample_eob_preventive.txt (RODRIGUEZ, MARIA E — BCBS, preventive) ----
+  - id: gt_015
+    question: "How much does the patient owe?"
+    expected_answer: "$0.00 — all services covered at 100% under ACA preventive care benefit."
+    relevant_sections: ["TOTALS", "REMARKS"]
+    document_type: preventive_eob
+    payer: bcbs
+    category: financial_totals
+    expected_fields:
+      patient_responsibility: "$0.00"
+    difficulty: easy
+
+  - id: gt_016
+    question: "Was the flu vaccine covered?"
+    expected_answer: "Yes, the flu vaccine (CPT 90686) was covered at 100% with no copay."
+    relevant_sections: ["SERVICE LINES", "REMARKS"]
+    document_type: preventive_eob
+    payer: bcbs
+    category: service_details
+    expected_fields:
+      flu_vaccine_covered: "yes"
+      flu_vaccine_copay: "$0.00"
+    difficulty: easy
+
+  - id: gt_017
+    question: "What diagnosis codes were used?"
+    expected_answer: "Z00.00, Z23, Z13.220"
+    relevant_sections: ["DIAGNOSIS CODES"]
+    document_type: preventive_eob
+    payer: bcbs
+    category: clinical_codes
+    expected_fields:
+      diagnosis_code_1: "Z00.00"
+      diagnosis_code_2: "Z23"
+      diagnosis_code_3: "Z13.220"
+    difficulty: easy
+
+  - id: gt_018
+    question: "Were any services denied on the preventive visit?"
+    expected_answer: "No, all services were covered at 100% with no denials."
+    relevant_sections: ["SERVICE LINES", "TOTALS", "REMARKS"]
+    document_type: preventive_eob
+    payer: bcbs
+    category: claim_status
+    expected_fields:
+      denial_present: "no"
+    difficulty: easy
+    edge_case: true
