@@ -1,4 +1,5 @@
 import os
+
 from pinecone import Pinecone, ServerlessSpec
 
 _pc = None
@@ -30,10 +31,12 @@ def get_pinecone_index():
     return _index
 
 
-def upsert_chunks(chunks: list[dict], embeddings: list[list[float]], document_name: str = "unknown", patient_name: str = "Unknown"):
+def upsert_chunks(
+    chunks: list[dict], embeddings: list[list[float]], document_name: str = "unknown", patient_name: str = "Unknown"
+):
     index = get_pinecone_index()
     vectors = []
-    for chunk, embedding in zip(chunks, embeddings):
+    for chunk, embedding in zip(chunks, embeddings, strict=False):
         vectors.append(
             {
                 "id": chunk["id"],

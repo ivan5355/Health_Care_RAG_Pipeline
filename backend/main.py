@@ -4,6 +4,7 @@ import sys
 import time
 import uuid
 from contextlib import asynccontextmanager
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,9 +14,9 @@ load_dotenv()
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from logging_config import setup_logging, correlation_id_var
-from routers import auth, documents, query, evaluations, prompts
-from data.store import load_sample_eob
+from data.store import load_sample_eob  # noqa: E402
+from logging_config import correlation_id_var, setup_logging  # noqa: E402
+from routers import auth, documents, evaluations, prompts, query  # noqa: E402
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -90,6 +91,7 @@ def health_check():
 
     try:
         from services.pinecone_store import get_pinecone_index
+
         get_pinecone_index().describe_index_stats()
         checks["pinecone"] = "ok"
     except Exception as e:

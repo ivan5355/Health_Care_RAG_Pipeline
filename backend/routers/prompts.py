@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+
 from auth import User, require_admin
 from services import prompt_manager
 
@@ -31,8 +32,8 @@ def list_versions(user: User = Depends(require_admin)):
 def get_version_detail(version: str, user: User = Depends(require_admin)):
     try:
         prompt = prompt_manager.load_prompt(version)
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Version '{version}' not found")
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=f"Version '{version}' not found") from e
     return {
         "version": prompt["version"],
         "name": prompt.get("name", ""),
@@ -47,7 +48,7 @@ def activate_version(req: SetActiveRequest, user: User = Depends(require_admin))
     try:
         prompt_manager.set_active_version(req.version)
     except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=404, detail=str(e)) from e
     return {"active_version": req.version, "ab_test": None}
 
 
@@ -56,7 +57,7 @@ def start_ab_test(req: ABTestRequest, user: User = Depends(require_admin)):
     try:
         prompt_manager.start_ab_test(req.control, req.candidate, req.traffic_pct)
     except (FileNotFoundError, ValueError) as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     return prompt_manager.get_registry()
 
 

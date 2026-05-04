@@ -1,13 +1,12 @@
 import hashlib
 import os
 import uuid
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Literal
 
 import jwt
 from fastapi import Depends, HTTPException, Request
 from pydantic import BaseModel
-
 
 JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret-change-in-production")
 JWT_EXPIRY_MINUTES = int(os.getenv("JWT_EXPIRY_MINUTES", "60"))
@@ -50,11 +49,11 @@ def authenticate_user(username: str, password: str) -> User | None:
         return None
     if user_data["password_hash"] != _hash_password(password):
         return None
-    return User(username=username, role=user_data["role"])
+    return User(username=username, role=user_data["role"])  # type: ignore[arg-type]
 
 
 def create_token(username: str, role: str) -> str:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     payload = {
         "sub": username,
         "role": role,
@@ -76,7 +75,7 @@ def _user_from_api_key(key: str) -> User | None:
     entry = API_KEYS.get(key)
     if not entry:
         return None
-    return User(username=f"service:{entry['service_name']}", role=entry["role"])
+    return User(username=f"service:{entry['service_name']}", role=entry["role"])  # type: ignore[arg-type]
 
 
 def get_current_user(request: Request) -> User:

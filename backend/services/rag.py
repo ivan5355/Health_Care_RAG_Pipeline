@@ -2,11 +2,12 @@ import hashlib
 import json
 import logging
 import time
+
+from models.chat import QueryMetadata, RAGAnswer, RAGResponse, SourceChunk
+from services import prompt_manager
 from services.bedrock_client import converse
 from services.embeddings import generate_embedding
 from services.pinecone_store import query_similar
-from services import prompt_manager
-from models.chat import RAGResponse, RAGAnswer, SourceChunk, QueryMetadata
 
 logger = logging.getLogger(__name__)
 
@@ -31,15 +32,17 @@ def _parse_structured(raw: str) -> RAGAnswer | None:
         return None
 
 
-def generate_answer(question: str, chunks: list[dict], version: str | None = None) -> tuple[str, int, RAGAnswer | None, str]:
+def generate_answer(
+    question: str, chunks: list[dict], version: str | None = None
+) -> tuple[str, int, RAGAnswer | None, str]:
     messages, system, inference_config, prompt_version = prompt_manager.build_messages(
-        question, chunks, version=version,
+        question,
+        chunks,
+        version=version,
     )
     model_id = prompt_manager.get_model_id(version)
 
-    input_hash = hashlib.sha256(
-        json.dumps(messages, sort_keys=True).encode()
-    ).hexdigest()
+    input_hash = hashlib.sha256(json.dumps(messages, sort_keys=True).encode()).hexdigest()
 
     start = time.time()
     response = converse(
@@ -104,11 +107,13 @@ def query_rag(question: str, top_k: int = 5, document_ids: list[str] | None = No
                 patient_name=patient_name,
             )
         )
-        chunks_for_generation.append({
-            "section_name": meta.get("section_name", "Unknown"),
-            "text": meta.get("text", ""),
-            "patient_name": patient_name,
-        })
+        chunks_for_generation.append(
+            {
+                "section_name": meta.get("section_name", "Unknown"),
+                "text": meta.get("text", ""),
+                "patient_name": patient_name,
+            }
+        )
 
     generation_start = time.time()
 

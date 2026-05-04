@@ -1,8 +1,10 @@
 import logging
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
-from models.document import Document, DocumentDetail, DocumentListResponse
-from data.store import get_all_documents, get_document, ingest_document, remove_document
+
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+
 from auth import User, get_current_user, require_admin
+from data.store import get_all_documents, get_document, ingest_document, remove_document
+from models.document import DocumentDetail, DocumentListResponse
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/documents", tags=["documents"])

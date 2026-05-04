@@ -1,25 +1,40 @@
 import contextvars
-import logging
 import json
+import logging
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 correlation_id_var: contextvars.ContextVar[str] = contextvars.ContextVar("correlation_id", default="")
 
 EXTRA_KEYS = (
     "correlation_id",
-    "method", "path", "status_code", "duration_ms",
-    "document_id", "question",
-    "prompt_version", "model_id", "input_tokens", "output_tokens",
-    "total_tokens", "cost_estimate", "input_hash", "latency_ms",
-    "user", "role", "action", "resource", "phi_accessed", "audit",
+    "method",
+    "path",
+    "status_code",
+    "duration_ms",
+    "document_id",
+    "question",
+    "prompt_version",
+    "model_id",
+    "input_tokens",
+    "output_tokens",
+    "total_tokens",
+    "cost_estimate",
+    "input_hash",
+    "latency_ms",
+    "user",
+    "role",
+    "action",
+    "resource",
+    "phi_accessed",
+    "audit",
 )
 
 
 class JSONFormatter(logging.Formatter):
     def format(self, record):
         log_entry = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),

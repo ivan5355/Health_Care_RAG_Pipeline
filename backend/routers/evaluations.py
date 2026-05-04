@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from models.evaluation import EvaluationRun, EvaluationRunDetail
-from services.evaluator import get_evaluation_runs, get_evaluation_run, run_evaluation, run_comparison
+
 from auth import User, get_current_user, require_admin
+from models.evaluation import EvaluationRun, EvaluationRunDetail
+from services.evaluator import get_evaluation_run, get_evaluation_runs, run_comparison, run_evaluation
 
 router = APIRouter(prefix="/api", tags=["evaluations"])
 
@@ -26,7 +27,9 @@ def get_evaluation(run_id: str, user: User = Depends(get_current_user)):
 
 
 @router.post("/evaluations/run", response_model=EvaluationRunDetail)
-def trigger_evaluation(name: str = "RAG Evaluation", prompt_version: str | None = None, user: User = Depends(require_admin)):
+def trigger_evaluation(
+    name: str = "RAG Evaluation", prompt_version: str | None = None, user: User = Depends(require_admin)
+):
     return run_evaluation(name, prompt_version=prompt_version)
 
 

@@ -19,7 +19,7 @@ def _load_yaml(path: Path) -> dict:
 # supports A/B traffic splitting, and allows instant rollback via config.
 # ---------------------------------------------------------------------------
 
-_registry = {
+_registry: dict[str, str | dict | None] = {
     "active_version": "v1",
     "ab_test": None,  # set to {"control": "v1", "candidate": "v2", "traffic_pct": 10} to enable
 }
@@ -59,16 +59,17 @@ def stop_ab_test():
 
 def resolve_version() -> str:
     ab = _registry["ab_test"]
-    if ab:
+    if ab and isinstance(ab, dict):
         if random.randint(1, 100) <= ab["traffic_pct"]:
-            return ab["candidate"]
-        return ab["control"]
-    return _registry["active_version"]
+            return ab["candidate"]  # type: ignore[return-value]
+        return ab["control"]  # type: ignore[return-value]
+    return _registry["active_version"]  # type: ignore[return-value]
 
 
 # ---------------------------------------------------------------------------
 # Prompt loading and message building
 # ---------------------------------------------------------------------------
+
 
 def load_prompt(version: str) -> dict:
     path = PROMPTS_DIR / f"{version}.yaml"
@@ -97,10 +98,12 @@ def build_messages(question: str, chunks: list[dict], version: str | None = None
 
     few_shot_messages = []
     for entry in prompt.get("few_shot", []):
-        few_shot_messages.append({
-            "role": entry["role"],
-            "content": [{"text": entry["text"]}],
-        })
+        few_shot_messages.append(
+            {
+                "role": entry["role"],
+                "content": [{"text": entry["text"]}],
+            }
+        )
 
     context_parts = []
     for i, chunk in enumerate(chunks, 1):

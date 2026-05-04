@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from datetime import datetime
+
+from pydantic import BaseModel
 
 
 class RetrievalMetrics(BaseModel):
@@ -57,5 +58,3 @@ class EvaluationRunDetail(EvaluationRun):
     prompt_version: str = ""
     model_id: str = ""
     golden_dataset_version: str = ""
-
-

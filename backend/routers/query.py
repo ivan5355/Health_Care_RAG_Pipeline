@@ -1,9 +1,11 @@
 import asyncio
 import logging
+
 from fastapi import APIRouter, Depends
+
+from auth import User, get_current_user
 from models.chat import RAGQuery, RAGResponse
 from services.rag import query_rag
-from auth import User, get_current_user
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["query"])
