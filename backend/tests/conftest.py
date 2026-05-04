@@ -21,8 +21,8 @@ MOCK_EMBEDDING = [0.1] * 1024
 @pytest.fixture
 def mock_bedrock():
     with (
-        patch("services.bedrock_client.converse", return_value=MOCK_CONVERSE_RESPONSE) as mock_conv,
-        patch("services.bedrock_client.invoke_model", return_value={"embedding": MOCK_EMBEDDING}) as mock_inv,
+        patch("services.rag.converse", return_value=MOCK_CONVERSE_RESPONSE) as mock_conv,
+        patch("services.embeddings.invoke_model", return_value={"embedding": MOCK_EMBEDDING}) as mock_inv,
     ):
         yield {"converse": mock_conv, "invoke_model": mock_inv}
 

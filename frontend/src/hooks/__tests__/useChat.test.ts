@@ -1,4 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
+import type { RAGResponse } from "@/types/chat";
 import { useChat } from "../useChat";
 
 vi.mock("@/services/api", () => ({
@@ -46,9 +47,9 @@ describe("useChat", () => {
   });
 
   it("sets loading during request", async () => {
-    let resolveQuery: (value: unknown) => void;
+    let resolveQuery: (value: RAGResponse) => void;
     vi.mocked(queryRAG).mockImplementation(
-      () => new Promise((resolve) => { resolveQuery = resolve; })
+      () => new Promise<RAGResponse>((resolve) => { resolveQuery = resolve; })
     );
 
     const { result } = renderHook(() => useChat());
