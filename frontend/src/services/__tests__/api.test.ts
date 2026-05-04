@@ -91,6 +91,7 @@ describe("API service", () => {
 
       await expect(queryRAG("test")).rejects.toThrow();
       expect(localStorage.getItem("auth_token")).toBeNull();
+      expect(locationMock.href).toBe("/login");
     });
   });
 });

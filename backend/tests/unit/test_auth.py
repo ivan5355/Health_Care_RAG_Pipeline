@@ -1,5 +1,3 @@
-from datetime import UTC
-
 from auth import (
     _user_from_api_key,
     authenticate_user,
@@ -43,16 +41,10 @@ def test_create_and_verify_token_roundtrip():
 
 
 def test_verify_token_expired():
-    from datetime import datetime, timedelta
+    from freezegun import freeze_time
 
-    import jwt
-
-    payload = {
-        "sub": "admin",
-        "role": "admin",
-        "exp": datetime.now(UTC) - timedelta(hours=1),
-    }
-    expired_token = jwt.encode(payload, "dev-secret-change-in-production", algorithm="HS256")
+    with freeze_time("2000-01-01"):
+        expired_token = create_token("admin", "admin")
     assert verify_token(expired_token) is None
 
 

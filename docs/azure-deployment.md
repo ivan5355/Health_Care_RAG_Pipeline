@@ -28,7 +28,7 @@ az containerapp env create \
   --location eastus
 ```
 
-### 2. Deploy the Backend
+### 2. Deploy the Backend (with secrets)
 
 ```bash
 az containerapp create \
@@ -42,6 +42,10 @@ az containerapp create \
   --max-replicas 3 \
   --cpu 0.5 \
   --memory 1.0Gi \
+  --secrets \
+    pinecone-key=<your-pinecone-api-key> \
+    bedrock-key=<your-bedrock-api-key> \
+    jwt-secret=<your-production-jwt-secret> \
   --env-vars \
     PINECONE_API_KEY=secretref:pinecone-key \
     BEDROCK_API_KEY=secretref:bedrock-key \
@@ -49,23 +53,11 @@ az containerapp create \
     JWT_SECRET=secretref:jwt-secret
 ```
 
-### 3. Configure Secrets
+### 3. Deploy the Frontend
+
+The frontend uses nginx to proxy `/api` requests to the backend service, so no runtime env var is needed — the API URL is configured in `nginx.conf`.
 
 ```bash
-az containerapp secret set \
-  --name backend \
-  --resource-group healthcare-rag-rg \
-  --secrets \
-    pinecone-key=<your-pinecone-api-key> \
-    bedrock-key=<your-bedrock-api-key> \
-    jwt-secret=<your-production-jwt-secret>
-```
-
-### 4. Deploy the Frontend
-
-```bash
-BACKEND_URL=$(az containerapp show --name backend --resource-group healthcare-rag-rg --query "properties.configuration.ingress.fqdn" -o tsv)
-
 az containerapp create \
   --name frontend \
   --resource-group healthcare-rag-rg \
@@ -79,7 +71,7 @@ az containerapp create \
   --memory 0.5Gi
 ```
 
-### 5. Configure Custom Domain (Optional)
+### 4. Configure Custom Domain (Optional)
 
 ```bash
 az containerapp hostname add \
